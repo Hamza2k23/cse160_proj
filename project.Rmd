@@ -1,0 +1,39 @@
+---
+title: "project"
+author: "team 6"
+date: "5/1/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+Data retrieval and cleansing
+
+```{r cars}
+# background csv
+
+```
+
+split data into training and test data, create k-folds
+
+```{r}
+
+```
+
+train models, perform k fold validation set and capture metrics
+
+```{r}
+
+```
+
+Plot model performance
+
+```{r pressure, echo=FALSE}
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
