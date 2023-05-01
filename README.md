@@ -23,10 +23,10 @@ https://metadata.ffcws.princeton.edu/variables
 - **git pull** - pulls remote repository changes to local repo 
 - **git revert [commit id]** - Swamped with merge conflicts, unfixable errors? git revert has your back. Used to revert back to old commits. 
 
-**Git tipcs:**
+# Git tips:
 - Frequently make commits when you progress 
 - Unless you know how to resolve merge conflicts, be cautious when git pulling. To be safe, only git pull during in-person meetings so you have others to help if conflicts arise.
 - You have to git add before you git commit
 
-# git resource:
+# Git resource:
  resolving merge conflicts: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-on-github
