@@ -1,4 +1,4 @@
-**GPA vs. Background Project Description**
+# GPA vs. Background Project Description
 **Group 6: Alex D'Alessandro, Max Jikharev, Hamza Shueib, Abby Vogel and Vic Collum**
 
 Your first project deliverable is a project description (as described on CourseSite) that one of you will need to post as a response to the obvious place in Piazza.  You'll need to think carefully about the realistic task and imagine a customer who would value the results of your task.  You'll need to understand the data you have selected (and produce a short data biography to demonstrate it).  Imagine exactly how you will model it (e.g., the "formula" that you would use in a model) so that you are clear about what you are predicting.  How will you evaluate the performance of your model?
