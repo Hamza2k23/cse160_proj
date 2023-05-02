@@ -15,23 +15,29 @@ Data retrieval and cleansing
 
 ```{r cars}
 # background csv
-
+source("data.R")
+source("split.R")
+source("model.R")
+source("graph.R")
 ```
 
 split data into training and test data, create k-folds
-
 ```{r}
-
+df <- get_data()
 ```
 
-train models, perform k fold validation set and capture metrics
-
+split data
 ```{r}
+list[test, train] <- get_split_data(df)
+```
 
+build model
+```{r}
+model <- build_model(train)
+predictions <- build_predictions(model, test)
 ```
 
 Plot model performance
-
 ```{r pressure, echo=FALSE}
 
 ```
