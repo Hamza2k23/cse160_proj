@@ -1,0 +1,221 @@
+---
+title: "project"
+author: "Abigail Vogel"
+date: "2023-05-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+  background <- read.csv("background.csv")
+    background_containing_gpa <- read.csv("train.csv")
+    #merge 
+    background <- merge(background, background_containing_gpa, by = "challengeID")
+
+    # replace NA gpa entries with avg
+    avg_gpa <- round(mean(background$gpa, na.rm=TRUE), 2)
+    background$gpa <- ifelse(is.na(background$gpa), avg_gpa, background$gpa)
+
+    # income 
+    background$household_income <- background$cm5hhinc  + background$cf5hhinc
+    avg_income <- mean(background$household_income)
+    background$household_income <- ifelse(background$household_income < 0, avg_income, background$household_income)
+
+    #relationship mother/father
+    avg_relm <- mean(background$m5c1[background$m5c1 >= 0])
+    background$relationship_m <- ifelse(background$m5c1 < 0, avg_relm, background$m5c1)
+    avg_relf <- round(mean(background$f5c1[background$f5c1 >= 0]))
+    background$relationship_f <- ifelse(background$f5c1 < 0, avg_relf, background$f5c1)
+
+
+    # explain wrong
+    avg_m <- mean(background$k5b1a[background$k5b1a  >= 0])
+    background$explain_wrong_m <- ifelse(background$k5b1a < 0, avg_m, background$k5b1a)
+    avg_f <- mean(background$k5b2a[background$k5b2a  >= 0])
+    background$explain_wrong_f <- ifelse(background$k5b2a  < 0, avg_f, background$k5b2a )
+
+    # treats other child better
+    avg_m <- mean(background$k5c2[background$k5c2 > 0])
+    background$treats_other_child_m <- ifelse(background$k5c2  < 0, avg_m, background$k5c2 )
+    avg_f <- mean(background$k5c6[background$k5c6 > 0])
+    background$treats_other_child_f <- ifelse(background$k5c6  < 0, avg_f, background$k5c6 )
+
+    # verbal abuse
+    avg_m <- mean(background$k5b1c[background$k5b1c >= 0])
+    background$verbal_abuse_m <- ifelse(background$k5b1c  < 0, avg_m, background$k5b1c)
+    avg_f <- mean(background$k5b2c[background$k5b2c >= 0])
+    background$verbal_abuse_f <- ifelse(background$k5b2c  < 0, avg_f, background$k5b2c)
+
+    #combining mother and father for observation comparison
+    background$verbal_abuse_mf <-   ((background$verbal_abuse_f + background$verbal_abuse_m ) / 2) + 1 # maps 0-4 values to 1-2, useful for comparing observation to parent responses
+    background$verbal_abuse_mf[background$verbal_abuse_mf > 2] <- 2
+    background$verbal_abuse_mf[background$verbal_abuse_mf < 1] <- 1
+
+    # positive emotional expression observation
+    avg_emo <- mean(background$o5e7[background$o5e7 > 0])
+    background$emotional_exp_o <- ifelse(background$o5e7  < 0, avg_emo, background$o5e7)
+
+    # observation of verbal abuse
+    avg_o <- mean(background$o5e8[background$o5e8 > 0])
+    background$verbal_abuse_o <- ifelse(background$o5e8  < 0, avg_o, background$o5e8)
+
+    #closeness to mother and father
+    avg <- mean(background$k5a2e[background$k5a2e >= 0])
+    background$closeness_m <- ifelse(background$k5a2e  < 0, avg, background$k5a2e)
+    avg <- mean(background$k5a3e[background$k5a3e >= 0])
+    background$closeness_f <- ifelse(background$k5a3e  < 0, avg, background$k5a3e)
+
+    #time lived with mom/dad
+    avg <- mean(background$f5a2[background$f5a2 > 0])
+    background$time_lived_f <- ifelse(background$f5a2  < 0, avg, background$f5a2)
+    avg <- mean(background$m5a2[background$m5a2 > 0])
+    background$time_lived_m <- ifelse(background$m5a2  < 0, avg, background$m5a2)
+
+    # miss events mom/dad
+    avg <- mean(background$k5a4d[background$k5a4d > 0])
+    background$miss_events_f <- ifelse(background$k5a4d  < 0, avg, background$k5a4d)
+    avg <- mean(background$k5a2d[background$k5a2d > 0])
+    background$miss_events_m <- ifelse(background$k5a2d  < 0, avg, background$k5a2d)
+    
+    background
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+ hist(background$gpa)
+
+library(ggplot2)
+
+ggplot(background, aes(x=gpa, y=household_income)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=relationship_m)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=relationship_f)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=emotional_exp_o)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=verbal_abuse_o)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=closeness_m)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=closeness_f)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=treats_other_child_m)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=treats_other_child_f)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=miss_events_m)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=miss_events_f)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=time_lived_m)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=time_lived_f)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=explain_wrong_m)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=explain_wrong_f)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=verbal_abuse_m)) + geom_point()
+
+ggplot(background, aes(x=gpa, y=verbal_abuse_f)) + geom_point()
+
+ggplot(background, aes(x=verbal_abuse_mf, y=verbal_abuse_o)) + geom_point()
+
+ggplot(background, aes(x=verbal_abuse_m, y=verbal_abuse_o)) + geom_point()
+
+ggplot(background, aes(x=verbal_abuse_f, y=verbal_abuse_o)) + geom_point()
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r pressure, echo=FALSE}
+
+set.seed(232)
+    rand <- sample(1:nrow(background),nrow(background)*0.8, replace = FALSE) # 
+    train <- background[rand, ]
+    test <- background[-rand, ] #selects the other 0.2 indices
+
+#original data
+GPA.Linear.Regression.Model <- lm(gpa ~ household_income + explain_wrong_m + explain_wrong_f + treats_other_child_m + treats_other_child_f+relationship_m+relationship_f + emotional_exp_o + verbal_abuse_o + verbal_abuse_mf + verbal_abuse_m + verbal_abuse_f + closeness_m + closeness_f + miss_events_m + miss_events_f + time_lived_m + time_lived_f, data = train)
+summary(GPA.Linear.Regression.Model)
+
+data <- data.frame(pred = predict(GPA.Linear.Regression.Model, newdata = test), actual = test$gpa)
+print("original data")
+mean((data$actual - data$pred)^2)
+
+GPA.Linear.Regression.Model1 <- lm(gpa ~  explain_wrong_m + explain_wrong_f + treats_other_child_m + treats_other_child_f+relationship_m+relationship_f + emotional_exp_o + verbal_abuse_o + verbal_abuse_mf + verbal_abuse_m + verbal_abuse_f + closeness_m + closeness_f + miss_events_m + miss_events_f + time_lived_m + time_lived_f, data = train)
+summary(GPA.Linear.Regression.Model1)
+
+data1 <- data.frame(pred = predict(GPA.Linear.Regression.Model1, newdata = test), actual = test$gpa)
+print("without household income")
+mean((data1$actual - data1$pred)^2)
+
+#without observer's perspective of abuse
+GPA.Linear.Regression.Model2 <- lm(gpa ~ household_income + explain_wrong_m + explain_wrong_f + treats_other_child_m + treats_other_child_f+relationship_m+relationship_f + emotional_exp_o + verbal_abuse_mf + verbal_abuse_m + verbal_abuse_f + closeness_m + closeness_f + miss_events_m + miss_events_f + time_lived_m + time_lived_f, data = train)
+summary(GPA.Linear.Regression.Model2)
+
+data2 <- data.frame(pred = predict(GPA.Linear.Regression.Model2, newdata = test), actual = test$gpa)
+print("without observer's perspective of abuse")
+mean((data2$actual - data2$pred)^2)
+
+#without parent's perspective of abuse
+GPA.Linear.Regression.Model2 <- lm(gpa ~ household_income + explain_wrong_m + explain_wrong_f + treats_other_child_m + treats_other_child_f+relationship_m+relationship_f + emotional_exp_o + verbal_abuse_o + closeness_m + closeness_f + miss_events_m + miss_events_f + time_lived_m + time_lived_f, data = train)
+summary(GPA.Linear.Regression.Model2)
+
+data2 <- data.frame(pred = predict(GPA.Linear.Regression.Model2, newdata = test), actual = test$gpa)
+print("without parents's perspective of abuse")
+mean((data2$actual - data2$pred)^2)
+
+#with only household income
+GPA.Linear.Regression.Model3 <- lm(gpa ~ household_income, data = train)
+summary(GPA.Linear.Regression.Model3)
+
+data3 <- data.frame(pred = predict(GPA.Linear.Regression.Model3, newdata = test), actual = test$gpa)
+print("only household income")
+mean((data3$actual - data3$pred)^2)
+
+
+```
+```{r pressure, echo=FALSE}
+
+library(rpart)
+
+GPA.Tree.Model <- rpart(gpa ~ household_income + explain_wrong_m + explain_wrong_f + treats_other_child_m + treats_other_child_f+relationship_m+relationship_f + emotional_exp_o + verbal_abuse_o + verbal_abuse_mf + verbal_abuse_m + verbal_abuse_f + closeness_m + closeness_f + miss_events_m + miss_events_f + time_lived_m + time_lived_f, data = background)
+
+
+tree.test <- predict(GPA.Tree.Model, newdata=background)
+table.testtree <- table(tree.test, background$gpa)
+#calculate accuracies
+accuracy.testtree = sum(diag(table.testtree))/sum(table.testtree) 
+cat("Original tree test accuracy: ", accuracy.testtree, "\n")
+
+
+
+```
+
+```{r pressure, echo=FALSE}
+
+library(kknn)
+
+GPA.KKNN.Model <-  kknn(gpa ~ household_income + explain_wrong_m + explain_wrong_f + treats_other_child_m + treats_other_child_f+relationship_m+relationship_f + emotional_exp_o + verbal_abuse_o + verbal_abuse_mf + verbal_abuse_m + verbal_abuse_f + closeness_m + closeness_f + miss_events_m + miss_events_f + time_lived_m + time_lived_f, background, test = distance = 2)
+
+kknnPrediction <- fitted(GPA.KKNN.Model) 
+
+
+
+```
