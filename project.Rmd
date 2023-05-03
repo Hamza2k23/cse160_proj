@@ -14,16 +14,17 @@ knitr::opts_chunk$set(echo = TRUE)
 Data retrieval and cleansing
 
 ```{r cars}
-# background csv
 source("data.R")
-source("split.R")
-source("model.R")
-source("graph.R")
+#df <- get_data()
+#write.csv(df, "cleaned.csv", row.names=T)
+
+df2 <- read.csv("cleaned.csv", row.names=1, header=T)
+df2
 ```
 
 split data into training and test data, create k-folds
 ```{r}
-df <- get_data()
+
 ```
 
 split data
